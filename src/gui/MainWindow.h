@@ -19,7 +19,7 @@ private:
     Gtk::TextView* textView;
     Gtk::Label* breadcrumb;
 
-    Gtk::Box* create_breadcrumb_view();
+    Gtk::Box* create_header_view();
     Gtk::Box* create_main_view();
     Gtk::Box* create_project_view();
     Gtk::Box* create_line_number_view(int lines);

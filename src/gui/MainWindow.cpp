@@ -4,6 +4,7 @@
 #include <gtkmm/separator.h>
 #include <gtkmm/alignment.h>
 #include <gtkmm/scrolledwindow.h>
+#include <gtkmm/paned.h>
 #include "MainWindow.h"
 #include "MenuBar.h"
 
@@ -14,7 +15,7 @@ MainWindow::MainWindow() {
 
     vbox->pack_start(*(new MenuBar()), Gtk::PACK_SHRINK);
     vbox->add(*(new Gtk::Separator()));
-    vbox->add(*create_breadcrumb_view());
+    vbox->add(*create_header_view());
     vbox->add(*(new Gtk::Separator()));
     vbox->pack_start(*create_main_view(), Gtk::PACK_EXPAND_WIDGET);
     vbox->add(*(new Gtk::Separator()));
@@ -24,34 +25,34 @@ MainWindow::MainWindow() {
     vbox->show_all();
 }
 
-Gtk::Box* MainWindow::create_breadcrumb_view() {
+Gtk::Box* MainWindow::create_header_view() {
     auto hbox = new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL);
     hbox->set_border_width(10);
 
-    breadcrumb = new Gtk::Label("Breadcrumb");
+    breadcrumb = new Gtk::Label("Project / Breadcrumb");
     hbox->pack_start(*breadcrumb, Gtk::PACK_SHRINK);
 
     return hbox;
 }
 
 Gtk::Box* MainWindow::create_main_view() {
-    auto box = new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL);
+    auto box = new Gtk::Box();
+    auto paned = new Gtk::HPaned();
 
-    auto vbox = new Gtk::Box(Gtk::ORIENTATION_VERTICAL);
-    auto hbox = new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL);
+    auto vpaned = new Gtk::VPaned;
 
-    auto separator_project = new Gtk::Separator();
-    separator_project->signal_drag_data_get().connect(sigc::mem_fun(*this, &MainWindow::on_button_drag_data_get));
+    auto hpaned = new Gtk::HPaned();
 
-    hbox->pack_start(*create_project_view());
-    hbox->pack_start(*separator_project);
-    hbox->pack_start(*create_editor_view(), Gtk::PACK_EXPAND_WIDGET);
+    hpaned->add1(*create_project_view());
+    hpaned->add2(*create_editor_view());
 
-    vbox->pack_start(*hbox, Gtk::PACK_EXPAND_WIDGET);
-    vbox->add(*create_console_view());
+    vpaned->add1(*hpaned);
+    vpaned->add2(*create_console_view());
 
-    box->add(*vbox);
-    box->add(*create_document_view());
+    paned->add1(*vpaned);
+    paned->add2(*create_document_view());
+
+    box->pack_start(*paned, Gtk::PACK_EXPAND_WIDGET);
 
     return box;
 }
@@ -112,6 +113,8 @@ Gtk::Box* MainWindow::create_line_number_view(int lines) {
 
 Gtk::Box* MainWindow::create_console_view() {
     auto vbox = new Gtk::Box(Gtk::ORIENTATION_VERTICAL);
+
+    vbox->pack_start(*(new Gtk::Label("<_")));
 
     return vbox;
 }
