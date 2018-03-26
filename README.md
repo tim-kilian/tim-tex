@@ -1,0 +1,3 @@
+# TimTex
+
+Latex IDE
