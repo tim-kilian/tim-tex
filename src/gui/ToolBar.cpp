@@ -5,6 +5,8 @@
 #include "ToolBar.h"
 #include <gtkmm/label.h>
 #include <gtkmm/button.h>
+#include <iostream>
+#include <fstream>
 
 ToolBar::ToolBar(MainWindow* window) : parent(window) {
     set_border_width(10);
@@ -25,6 +27,7 @@ ToolBar::ToolBar(MainWindow* window) : parent(window) {
 }
 
 void ToolBar::on_compile() {
-    system("pdflatex --output-directory /home/tim/LatexProjects/test /home/tim/LatexProjects/test/helloworld.tex");
+    system("pdflatex --output-directory /home/tim/LatexProjects/test /home/tim/LatexProjects/test/helloworld.tex > /home/tim/LatexProjects/test/helloworld.out");
     parent->getPreview()->update();
+    parent->getConsole()->push_out(std::ifstream("/home/tim/LatexProjects/test/helloworld.out"));
 }

@@ -13,6 +13,7 @@ public:
     MainWindow();
 
     Preview* getPreview() { return &preview; };
+    Console* getConsole() { return &console; };
 
 private:
     Gtk::Box* create_view_main();
