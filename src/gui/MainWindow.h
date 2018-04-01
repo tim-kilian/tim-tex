@@ -12,15 +12,16 @@ class MainWindow : public Gtk::Window {
 public:
     MainWindow();
 
-private:
-    Editor* editor;
-    Console* console;
-    ProjectTree* projectTree;
-    Preview* preview;
+    Preview* getPreview() { return &preview; };
 
-    Gtk::Box* create_header_view();
-    Gtk::Box* create_main_view();
-    Gtk::Box* create_footer_view();
+private:
+    Gtk::Box* create_view_main();
+    Gtk::Box* create_view_status_bar();
+
+    Editor editor;
+    Preview preview;
+    Console console;
+    ProjectTree projectTree;
 };
 
 

@@ -5,56 +5,46 @@
 #include <gtkmm/alignment.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/paned.h>
+#include <gtkmm/button.h>
 #include "MainWindow.h"
 #include "MenuBar.h"
+#include "ToolBar.h"
 
-MainWindow::MainWindow() {
+MainWindow::MainWindow() : editor(), console(), projectTree(), preview() {
     set_default_size(1200, 800);
-
-    editor = new Editor();
-    console = new Console();
-    projectTree = new ProjectTree();
-    preview = new Preview();
 
     auto vbox = new Gtk::Box(Gtk::ORIENTATION_VERTICAL);
 
-    vbox->pack_start(*(new MenuBar()), Gtk::PACK_SHRINK);
-    vbox->add(*create_header_view());
-    vbox->add(*(new Gtk::Separator()));
-    vbox->pack_start(*create_main_view(), Gtk::PACK_EXPAND_WIDGET);
-    vbox->add(*(new Gtk::Separator()));
-    vbox->pack_end(*create_footer_view(), Gtk::PACK_SHRINK);
+    vbox->pack_start(*(new MenuBar(this)), Gtk::PACK_SHRINK);
+    vbox->pack_start(*(new ToolBar(this)), Gtk::PACK_SHRINK);
+    vbox->pack_start(*(new Gtk::Separator()), Gtk::PACK_SHRINK);
+    vbox->pack_start(*create_view_main(), Gtk::PACK_EXPAND_WIDGET);
+    vbox->pack_start(*(new Gtk::Separator()), Gtk::PACK_SHRINK);
+    vbox->pack_end(*create_view_status_bar(), Gtk::PACK_SHRINK);
 
     add(*vbox);
     vbox->show_all();
+
+    editor.open_file("/home/tim/LatexProjects/test/helloworld.tex");
+    preview.set_file("/home/tim/LatexProjects/test/helloworld.pdf");
 }
 
-Gtk::Box* MainWindow::create_header_view() {
-    auto hbox = new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL);
-    hbox->set_border_width(10);
-
-    auto breadcrumb = new Gtk::Label("Project / Breadcrumb");
-    hbox->pack_start(*breadcrumb, Gtk::PACK_SHRINK);
-
-    return hbox;
-}
-
-Gtk::Box* MainWindow::create_main_view() {
+Gtk::Box* MainWindow::create_view_main() {
     auto hpaned = new Gtk::HPaned();
-    hpaned->add1(*projectTree);
-    hpaned->add2(*editor);
+    hpaned->add1(projectTree);
+    hpaned->add2(editor);
 
     hpaned->set_position(300);
 
     auto vpaned = new Gtk::VPaned();
     vpaned->add1(*hpaned);
-    vpaned->add2(*console);
+    vpaned->add2(console);
 
     vpaned->set_position(650);
 
     auto paned = new Gtk::HPaned();
     paned->add1(*vpaned);
-    paned->add2(*preview);
+    paned->add2(preview);
 
     paned->set_position(800);
 
@@ -64,7 +54,7 @@ Gtk::Box* MainWindow::create_main_view() {
     return box;
 }
 
-Gtk::Box* MainWindow::create_footer_view() {
+Gtk::Box* MainWindow::create_view_status_bar() {
     auto hbox = new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL);
 
     hbox->set_border_width(5);

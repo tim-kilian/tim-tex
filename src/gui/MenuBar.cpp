@@ -2,10 +2,12 @@
 #include <gtkmm/separatormenuitem.h>
 #include "MenuBar.h"
 
-MenuBar::MenuBar() {
+MenuBar::MenuBar(MainWindow* window) : parent(window) {
     append(*create_menu_file());
     append(*create_menu_edit());
-    // append(*create_menu_view());
+    append(*create_menu_view());
+    append(*create_menu_document());
+    append(*create_menu_vcs());
     append(*create_menu_help());
 }
 
@@ -79,9 +81,43 @@ Gtk::MenuItem *MenuBar::create_menu_view() {
     Gtk::MenuItem* item_view = new Gtk::MenuItem("View");
     item_view->set_submenu(*menu_view);
 
+    Gtk::MenuItem* item_view_prev = new Gtk::MenuItem("Previous page");
+    item_view_prev->signal_activate().connect(sigc::mem_fun(parent->getPreview(), &Preview::on_decrease_page));
+    menu_view->append(*item_view_prev);
+
+    Gtk::MenuItem* item_view_next = new Gtk::MenuItem("Next page");
+    item_view_next->signal_activate().connect(sigc::mem_fun(parent->getPreview(), &Preview::on_increase_page));
+    menu_view->append(*item_view_next);
+
     menu_view->append(*(new Gtk::SeparatorMenuItem));
 
     return item_view;
+}
+
+Gtk::MenuItem* MenuBar::create_menu_document() {
+    menu_document = new Gtk::Menu();
+
+    Gtk::MenuItem* item_document = new Gtk::MenuItem("Document");
+    item_document->set_submenu(*menu_document);
+
+    Gtk::MenuItem* item_document_compile = new Gtk::MenuItem("Compile");
+    item_document_compile->signal_activate().connect([] { std::cout << "Compile" << std::endl; });
+    menu_document->append(*item_document_compile);
+
+    return item_document;
+}
+
+Gtk::MenuItem* MenuBar::create_menu_vcs() {
+    menu_vcs = new Gtk::Menu();
+
+    Gtk::MenuItem* item_vcs = new Gtk::MenuItem("VCS");
+    item_vcs->set_submenu(*menu_vcs);
+
+    Gtk::MenuItem* item_vcs_push = new Gtk::MenuItem("Push");
+    item_vcs_push->signal_activate().connect([] { std::cout << "Push" << std::endl; });
+    menu_vcs->append(*item_vcs_push);
+
+    return item_vcs;
 }
 
 Gtk::MenuItem *MenuBar::create_menu_help() {
@@ -97,4 +133,8 @@ Gtk::MenuItem *MenuBar::create_menu_help() {
     menu_help->append(*item_help_about);
 
     return item_help;
+}
+
+void MenuBar::on_next_page() {
+    // parent->getPreview()->increase_page();
 }
