@@ -7,13 +7,15 @@
 #include <gtkmm/paned.h>
 #include <gtkmm/button.h>
 #include "MainWindow.h"
+#include "ProjectTree.h"
 #include "MenuBar.h"
 #include "ToolBar.h"
 
-MainWindow::MainWindow() : editor(), console(), projectTree(), preview() {
+MainWindow::MainWindow() : editor(), console(), preview() {
     set_default_size(1200, 800);
 
     auto vbox = new Gtk::Box(Gtk::ORIENTATION_VERTICAL);
+
 
     vbox->pack_start(*(new MenuBar(this)), Gtk::PACK_SHRINK);
     vbox->pack_start(*(new ToolBar(this)), Gtk::PACK_SHRINK);
@@ -31,7 +33,11 @@ MainWindow::MainWindow() : editor(), console(), projectTree(), preview() {
 
 Gtk::Box* MainWindow::create_view_main() {
     auto hpaned = new Gtk::HPaned();
-    hpaned->add1(projectTree);
+
+    auto project_tree = new ProjectTree(this);
+    hpaned->add1(*project_tree);
+    project_tree->open("/home/tim/LatexProjects/test");
+
     hpaned->add2(editor);
 
     hpaned->set_position(300);

@@ -21,7 +21,7 @@ EditorWindow::EditorWindow(const char* path) :
     auto buffer = text_view.get_buffer();
 
     file.seekg(0, std::ios::end);
-    auto len = file.tellg();
+    int len = static_cast<int>(file.tellg());
     auto ret = new char[len-1];
     file.seekg(0, std::ios::beg);
     file.read(ret, len);
@@ -84,4 +84,8 @@ void EditorWindow::on_changed() {
 bool EditorWindow::typed_input(int) {
     save();
     return false;
+}
+
+std::string EditorWindow::get_title() {
+    return std::__cxx11::string();
 }

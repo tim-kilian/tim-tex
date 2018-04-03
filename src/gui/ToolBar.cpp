@@ -3,7 +3,6 @@
 //
 
 #include "ToolBar.h"
-#include <gtkmm/label.h>
 #include <gtkmm/button.h>
 #include <iostream>
 #include <fstream>

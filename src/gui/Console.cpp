@@ -12,10 +12,10 @@ Console::Console() : text_view(), console_window() {
 
 void Console::push_out(std::ifstream out) {
     out.seekg(0, std::ios::end);
-    auto len = out.tellg();
-    auto ret = new char[len-1];
+    int len = static_cast<int>(out.tellg()) - 1;
+    auto ret = new char[len];
     out.seekg(0, std::ios::beg);
-    out.read(ret, len);
+    out.read(ret, len+1);
     push_out(ret);
     out.close();
 }

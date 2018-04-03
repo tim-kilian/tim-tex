@@ -16,10 +16,13 @@ public:
 private:
     Gtk::Notebook notebook;
 
+    Gtk::Box* create_tab_label(const char* title);
     std::vector<std::string> splitpath(const std::string &str);
 
 protected:
+
     void on_switch_tab(Gtk::Widget* tab, int page);
+    void on_close_tab();
 };
 
 

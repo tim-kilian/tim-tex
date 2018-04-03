@@ -11,6 +11,8 @@ class EditorWindow : public Gtk::Box {
 public:
     explicit EditorWindow(const char* path);
 
+    std::string get_title();
+
 private:
     const char* filepath;
 

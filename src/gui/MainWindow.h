@@ -5,13 +5,13 @@
 #include <gtkmm/window.h>
 #include "Editor.h"
 #include "Console.h"
-#include "ProjectTree.h"
 #include "Preview.h"
 
 class MainWindow : public Gtk::Window {
 public:
     MainWindow();
 
+    Editor* getEditor() { return &editor; };
     Preview* getPreview() { return &preview; };
     Console* getConsole() { return &console; };
 
@@ -22,7 +22,6 @@ private:
     Editor editor;
     Preview preview;
     Console console;
-    ProjectTree projectTree;
 };
 
 
